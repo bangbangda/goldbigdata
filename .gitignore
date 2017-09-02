@@ -1,6 +1,6 @@
 */logs/*
 !*/logs/index.html
-*/cache/*
+/writable/cache/*
 !*/cache/index.html
 !*/cache/.htaccess
 */uploads/*

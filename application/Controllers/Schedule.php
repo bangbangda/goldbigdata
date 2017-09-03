@@ -9,6 +9,7 @@ class Schedule extends Controller
 
 	public function index()
 	{
+		log_message('debug', 'Crontab Schedule-index start');
 		require COMPOSER_PATH;
 
 		$scheduler = new Scheduler();

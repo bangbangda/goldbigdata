@@ -18,6 +18,7 @@ class Finance extends Controller
      */
 	public function gold()
 	{
+        log_message('debug', 'Crontab Finance-gold start');
         require COMPOSER_PATH;
 		$goldsModel = new GoldsModel();
 

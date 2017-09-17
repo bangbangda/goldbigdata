@@ -10,6 +10,10 @@ class Gold extends Controller {
     function index() {
         //echo $_SERVER['SERVER_NAME'];exit;
         //echo base_url();exit;
+//        $GoldsModel = new GoldsModel();
+//        $builder = $GoldsModel->groupBy('variety')->table('golds');
+//        $data['variety'] = $builder->groupBy('variety')->getResultArray();
+        //var_dump($data);exit;
         echo view('admin/header');
         echo view('admin/gold/list');
         echo view('admin/footer');
@@ -32,7 +36,7 @@ class Gold extends Controller {
         $info['data'] = $builder->orderBy($sort[1], $sort[2])
                                 ->get($post['pSize'], $post['pSize'] * ($post['cPage'] - 1))
                                 ->getResultArray();
-        $info['totals'] = $builder->countAll();;
+        $info['totals'] = $builder->countAll();
         echo json_encode($info);
     }
 

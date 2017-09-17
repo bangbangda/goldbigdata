@@ -6,16 +6,16 @@
                 <h3>黄金大数据</h3>
             </div>
 
-<!--            <div class="title_right">
-                <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Search for...">
-                        <span class="input-group-btn">
-                            <button class="btn btn-default" type="button">Go!</button>
-                        </span>
-                    </div>
-                </div>
-            </div>-->
+            <!--            <div class="title_right">
+                            <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Search for...">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default" type="button">Go!</button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>-->
         </div>
 
         <div class="clearfix"></div>
@@ -43,8 +43,31 @@
                         <div class="clearfix"></div>
                     </div>
                     <div class="x_content">
+                        <form class="form-horizontal form-label-left">
+                            <div class="form-group">
+                                <label class="control-label col-md-1 col-sm-1 col-xs-12">类型</label>
+                                <div class="col-md-1 col-sm-1 col-xs-12">
+                                    <select class="form-control">
+                                        <option>Choose option</option>
+                                        <option>Option one</option>
+                                        <option>Option two</option>
+                                        <option>Option three</option>
+                                        <option>Option four</option>
+                                    </select>
+                                </div>
+                                <label class="control-label col-md-1 col-sm-1 col-xs-12">Default Input</label>
+                                <div class="col-md-1 col-sm-1 col-xs-12">
+                                    <input type="text" class="form-control" placeholder="Default Input">
+                                </div>
+                                <label class="control-label col-md-1 col-sm-1 col-xs-12">Default Input</label>
+                                <div class="col-md-1 col-sm-1 col-xs-12">
+                                    <input type="text" class="form-control" placeholder="Default Input">
+                                </div>
+                            </div>
+                        </form>
                         <table grid-manager="table_one"></table>
                     </div>
+                    
                 </div>
             </div>
         </div>
@@ -57,12 +80,12 @@
 <script type="text/javascript">
     var table = $("table[grid-manager='table_one']");
     table.GM({
-        ajax_url: 'http://liuyi.com/admin/gold/post_data'
+        ajax_url: '<?php echo base_url() ?>/admin/gold/post_data'
         , ajax_type: 'POST'
         , query: {pluginId: 1}
         , supportAjaxPage: true
         , disableCache: true
-        , supportSorting:true
+        , supportSorting: true
         , height: '100%'
         , columnData: [
             {
@@ -88,6 +111,14 @@
             }, {
                 key: 'limit',
                 text: '涨跌幅',
+                sorting: ''
+            }, {
+                key: 'yespri',
+                text: '昨收价',
+                sorting: ''
+            }, {
+                key: 'totalvol',
+                text: '总成交量',
                 sorting: ''
             }, {
                 key: 'time',

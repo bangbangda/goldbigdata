@@ -15,6 +15,14 @@
     <link href="<?php echo base_url()?>assets/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
     <!-- NProgress -->
     <link href="<?php echo base_url()?>assets/vendors/nprogress/nprogress.css" rel="stylesheet">
+    <!-- Ion.RangeSlider -->
+    <link href="<?php echo base_url()?>assets/vendors/normalize-css/normalize.css" rel="stylesheet">
+    <link href="<?php echo base_url()?>assets/vendors/ion.rangeSlider/css/ion.rangeSlider.css" rel="stylesheet">
+    <link href="<?php echo base_url()?>assets/vendors/ion.rangeSlider/css/ion.rangeSlider.skinFlat.css" rel="stylesheet">
+    <!-- PNotify -->
+    <link href="<?php echo base_url()?>assets/vendors/pnotify/dist/pnotify.css" rel="stylesheet">
+    <link href="<?php echo base_url()?>assets/vendors/pnotify/dist/pnotify.buttons.css" rel="stylesheet">
+    <link href="<?php echo base_url()?>assets/vendors/pnotify/dist/pnotify.nonblock.css" rel="stylesheet">
 
     <!-- Custom Theme Style -->
     <link href="<?php echo base_url()?>assets/build/css/custom.min.css" rel="stylesheet">

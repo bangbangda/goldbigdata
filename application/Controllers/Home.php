@@ -16,14 +16,17 @@ class Home extends Controller
 
 	public function get_data()
 	{
-		$goldsModel = new GoldsModel();
+		$db = \Config\Database::connect();
+		$sql = 'SELECT max(`latestpri`) latestpri,
+				       date_format(`time`,"%H:%i") `time`
+				FROM `golds`
+				WHERE `create_date` = "'.date('Y-m-d').'"
+				  AND `variety` = "AU99.99"
+				  AND date_format(`time`,"%Y-%m-%d") = "'.date('Y-m-d').'"
+				GROUP BY `time`
+				ORDER BY `time`';
+		$au9999_data = $db->query($sql)->getResult('array');
 
-		$au9999_data = $goldsModel->select('latestpri, DATE_FORMAT(time,"%H:%i") time')
-								  ->findWhere([
-										'create_date' => date('Y-m-d'),
-										'variety' => 'AU99.99'
-									]);
-							
 		$latestpri = [];
 		$time = [];
 		foreach ($au9999_data as $key => $value) {

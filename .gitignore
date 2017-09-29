@@ -6,3 +6,4 @@
 */uploads/*
 !*/uploads/index.html
 /vendor/
+application/Config/Database.php

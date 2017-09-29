@@ -74,7 +74,7 @@
                             </br>
                             <div class="form-group">
                                 <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-1">
-                                    <button type="button" class="btn btn-default" >重 置</button>
+                                    <button type="button" class="btn btn-default" onclick="reset_fun();">重 置</button>
                                     <button type="button" class="btn btn-success" onclick="submit_search();">检 索</button>
                                 </div>
                             </div>
@@ -175,15 +175,28 @@
     
     // 检索
     function submit_search() {
-        console.log($("#variety").val());
-//        $.ajax({
-//            type: "POST",
-//            url: "<?php echo base_url() ?>/admin/gold/post_check",
-//            data: "maxpri=" + $("#maxpri").val(),
-//            success: function(msg){
-//                //alert( "Data Saved: " + msg );
-//            }
-//         });
+        $.ajax({
+            type: "POST",
+            url: "<?php echo base_url() ?>/admin/gold/post_check",
+            data: "maxpri=" + $("#maxpri").val(),
+            dataType: "json",
+            success: function(result){
+                if(result.maxpri){
+                    new PNotify({
+                        title: '输入 错误',
+                        text: result.maxpri,
+                        type: 'error',
+                        styling: 'bootstrap3'
+                    });
+                } else {
+                    start_search();
+                }
+            }
+        });
+    }
+    
+    function start_search() {
+        // 执行检索
         var _query = {
                 variety: $("#variety").val(),
                 openpriMin: $("#openpriMin").val(),
@@ -198,6 +211,14 @@
                 styling: 'bootstrap3'
             });
         });
+    }
+    
+    // 重置
+    function reset_fun () {
+        $("#variety").find("option[value='']").attr("selected",true);
+        $("#maxpri").val('');
+        slider.reset();
+        start_search();
     }
 </script>
 

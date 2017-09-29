@@ -24,21 +24,27 @@ class Gold extends Controller {
     }
     
     function post_check() {
+        // 获取所有值
         $data = $this->request->getPost();
+        // 加载验证类
         $validation =  \Config\Services::validation();
-   
-        $validation->setRules(
-            array('maxpri' => 'required|valid_email'),
-            array('maxpri' => array(
-                    'required' => 'You must choose a {field}.{param}'
-                )
-            )
-        );
+        // 初始化验证信息
+        $rules = array();
+        if ($data['maxpri'] != '') {
+            $rules['maxpri'] = 'numeric';
+        }
+        $rules_err = [
+            'maxpri' => [
+                'numeric' => '最高价 请输入数字',
+            ]
+        ];
+        $validation->setRules($rules,$rules_err);
         $validation->run($data);
+        // 返回验证信息
         if (!$this->validate([])){
-            var_dump($validation->getErrors());
+            echo json_encode($validation->getErrors());
         } else {
-            echo 'Success';
+            echo json_encode($validation->getErrors());
         }
     }
 
@@ -58,7 +64,7 @@ class Gold extends Controller {
         }
         // 判断是否存在最高价检索条件
         if (isset($post['maxpri']) && $post['maxpri'] != '') {
-            $where_array['maxpri'] = $post['maxpri'];
+            $where_array['maxpri'] = (float)$post['maxpri'];
         }
         foreach ($post as $key => $value) {
             // 判断是否存在排序

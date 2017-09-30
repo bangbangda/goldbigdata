@@ -83,12 +83,27 @@ class Gold extends Controller {
                                 ->orderBy($sort[1], $sort[2])
                                 ->get($post['pSize'], $post['pSize'] * ( ($post['cPage'] == 0 ? 1:$post['cPage']) - 1))  // $post['cPage'] 当数据量为0时，在返回时的页数为0，感觉是官方bug
                                 ->getResultArray();
+        foreach ($info['data'] as $key => $value) {
+            $info['data'][$key]['operation'] = "修改";
+        }
         // 查询数据总量
         $totals = $GoldsModel->where($where_array)
                                 ->orderBy($sort[1], $sort[2])
                                 ->get()
                                 ->getResultArray();
         $info['totals'] = count($totals);
+        echo json_encode($info);
+    }
+
+    /**
+     * ajax 数据获取
+     */
+    function get_row() {
+        // 获取值 
+        $post = $this->request->getPost();
+        $GoldsModel = new GoldsModel();
+        $info = $GoldsModel->getWhere(['id' => $post['id']])
+                                   ->getRowArray();
         echo json_encode($info);
     }
 

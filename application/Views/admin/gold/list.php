@@ -100,8 +100,23 @@
 <script src="<?php echo base_url()?>assets/vendors/ion.rangeSlider/js/ion.rangeSlider.min.js"></script>
 <script type="text/javascript">
     $(function () {
-       
+        $('#time_new').daterangepicker({
+            singleDatePicker: true,
+            timePicker: true,
+            timePickerSeconds: true,
+            singleClasses: "picker_3",
+            locale: {
+                applyLabel: '确定',
+                cancelLabel: '取消',
+                format: 'YYYY-MM-DD HH:mm:ss',
+                daysOfWeek: '日_一_二_三_四_五_六'.split('_'),
+                monthNames: '1月_2月_3月_4月_5月_6月_7月_8月_9月_10月_11月_12月'.split('_'),
+            }
+        }, function(start, end, label) {
+            console.log(start.toISOString(), end.toISOString(), label);
+        });
     });
+
     
     // 开盘价滑块配置
     $("#openpri").ionRangeSlider({
@@ -120,14 +135,17 @@
             $("#openpriMax").val(data.to)
         }
     });
-    
     var slider = $("#openpri").data("ionRangeSlider");
+
+    // 初始化旧数据，下面修改modal会用到
+    var old_data;
     
     // 列表参数配置
     var table = $("table[grid-manager='table_one']");
     table.GM({
         ajax_url: '<?php echo base_url() ?>/admin/gold/post_data'
         , ajax_type: 'POST'
+        , supportRemind: true
         , query: {pluginId: 1}
         , supportAjaxPage: true
         , supportSorting: true
@@ -135,6 +153,7 @@
         , columnData: [
             {
                 key: 'variety',
+                remind: '这里可以显示说明',
                 text: '类型',
                 sorting: ''
             }, {
@@ -169,9 +188,45 @@
                 key: 'time',
                 text: '时间',
                 sorting: 'DESC'
+            }, {
+                key: 'operation',
+                text: '操作',
+                remind: '对该数据进行操作',
+                template: function(nodeData, rowData){
+                     // nodeData: 当前单元格的渲染数据
+                    // rowData: 当前单元格所在行的渲染数据
+                    return '<button type="button" class="btn btn-success btn-xs" onclick="update_modal_show(' + rowData.id + ');">&nbsp;&nbsp;修改&nbsp;&nbsp;</button>';
+                }
             }
         ]
     });
+
+    // 修改modal弹出
+    function update_modal_show (id) {
+        $.ajax({
+            type: "POST",
+            url: "<?php echo base_url() ?>/admin/gold/get_row",
+            data: "id=" + id,
+            dataType: "json",
+            success: function(result){
+                console.log(result);
+                if (result == null) {
+                    new PNotify({
+                        title: '出错啦(╯﹏╰)',
+                        text: '刷新下试试或联系我们管理员吧',
+                        type: 'error',
+                        styling: 'bootstrap3'
+                    });
+                } else {
+                    $("#variety_new").find("option[value='" + result.variety + "']").attr("selected",true);
+                    $("#latestpri_new").val(result.latestpri);
+                    $("#openpri_new").val(result.openpri);
+                    $("#time_new").val(result.time);
+                    $('#update_modal').modal('show');
+                }
+            }
+        });
+    }
     
     // 检索
     function submit_search() {
@@ -195,6 +250,7 @@
         });
     }
     
+    // 检索提出：感觉别的地方还能调用
     function start_search() {
         // 执行检索
         var _query = {
@@ -221,4 +277,59 @@
         start_search();
     }
 </script>
+<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true" id="update_modal">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
 
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+          </button>
+          <h4 class="modal-title" id="myModalLabel">修改</h4>
+        </div>
+        <div class="modal-body">
+            <form data-parsley-validate class="form-horizontal form-label-left">
+                
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">类 型 <span class="required">*</span></label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <select class="form-control" id="variety_new">
+                            <?php foreach ($variety as $key => $value) :?>
+                            <option value="<?php echo $value['variety']?>"><?php echo $value['variety']?></option>
+                            <?php endforeach;?>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">最 新 价 <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                      <input type="text" id="latestpri_new" name="last-name" required="required" class="form-control col-md-7 col-xs-12">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">开 盘 价 <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                      <input type="text" id="openpri_new" name="last-name" required="required" class="form-control col-md-7 col-xs-12">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">时 间 <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="text" class="form-control has-feedback-left" id="time_new">
+                        <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true"></span>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">关 闭</button>
+          <button type="button" class="btn btn-success">保 存</button>
+        </div>
+      </div>
+    </div>
+</div>

@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Gentelella Alela! | </title>
+    <title>棒棒哒管理 | 黄金</title>
 
     <!-- Bootstrap -->
     <link href="<?php echo base_url()?>assets/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -15,6 +15,8 @@
     <link href="<?php echo base_url()?>assets/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
     <!-- NProgress -->
     <link href="<?php echo base_url()?>assets/vendors/nprogress/nprogress.css" rel="stylesheet">
+    <!-- bootstrap-daterangepicker -->
+    <link href="<?php echo base_url()?>assets/vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
     <!-- Ion.RangeSlider -->
     <link href="<?php echo base_url()?>assets/vendors/normalize-css/normalize.css" rel="stylesheet">
     <link href="<?php echo base_url()?>assets/vendors/ion.rangeSlider/css/ion.rangeSlider.css" rel="stylesheet">
@@ -32,6 +34,9 @@
     
     <!-- jQuery -->
     <script src="<?php echo base_url()?>assets/vendors/jquery/dist/jquery.min.js"></script>
+    <!-- bootstrap-daterangepicker -->
+    <script src="<?php echo base_url()?>assets/vendors/moment/min/moment.min.js"></script>
+    <script src="<?php echo base_url()?>assets/vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
   </head>
 
   <body class="nav-md">

@@ -24,21 +24,27 @@ class Gold extends Controller {
     }
     
     function post_check() {
+        // 获取所有值
         $data = $this->request->getPost();
+        // 加载验证类
         $validation =  \Config\Services::validation();
-   
-        $validation->setRules(
-            array('maxpri' => 'required|valid_email'),
-            array('maxpri' => array(
-                    'required' => 'You must choose a {field}.{param}'
-                )
-            )
-        );
+        // 初始化验证信息
+        $rules = array();
+        if ($data['maxpri'] != '') {
+            $rules['maxpri'] = 'numeric';
+        }
+        $rules_err = [
+            'maxpri' => [
+                'numeric' => '最高价 请输入数字',
+            ]
+        ];
+        $validation->setRules($rules,$rules_err);
         $validation->run($data);
+        // 返回验证信息
         if (!$this->validate([])){
-            var_dump($validation->getErrors());
+            echo json_encode($validation->getErrors());
         } else {
-            echo 'Success';
+            echo json_encode($validation->getErrors());
         }
     }
 
@@ -58,7 +64,7 @@ class Gold extends Controller {
         }
         // 判断是否存在最高价检索条件
         if (isset($post['maxpri']) && $post['maxpri'] != '') {
-            $where_array['maxpri'] = $post['maxpri'];
+            $where_array['maxpri'] = (float)$post['maxpri'];
         }
         foreach ($post as $key => $value) {
             // 判断是否存在排序
@@ -77,12 +83,27 @@ class Gold extends Controller {
                                 ->orderBy($sort[1], $sort[2])
                                 ->get($post['pSize'], $post['pSize'] * ( ($post['cPage'] == 0 ? 1:$post['cPage']) - 1))  // $post['cPage'] 当数据量为0时，在返回时的页数为0，感觉是官方bug
                                 ->getResultArray();
+        foreach ($info['data'] as $key => $value) {
+            $info['data'][$key]['operation'] = "修改";
+        }
         // 查询数据总量
         $totals = $GoldsModel->where($where_array)
                                 ->orderBy($sort[1], $sort[2])
                                 ->get()
                                 ->getResultArray();
         $info['totals'] = count($totals);
+        echo json_encode($info);
+    }
+
+    /**
+     * ajax 数据获取
+     */
+    function get_row() {
+        // 获取值 
+        $post = $this->request->getPost();
+        $GoldsModel = new GoldsModel();
+        $info = $GoldsModel->getWhere(['id' => $post['id']])
+                                   ->getRowArray();
         echo json_encode($info);
     }
 

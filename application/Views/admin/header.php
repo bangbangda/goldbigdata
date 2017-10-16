@@ -25,7 +25,7 @@
     <link href="<?php echo base_url()?>assets/vendors/pnotify/dist/pnotify.css" rel="stylesheet">
     <link href="<?php echo base_url()?>assets/vendors/pnotify/dist/pnotify.buttons.css" rel="stylesheet">
     <link href="<?php echo base_url()?>assets/vendors/pnotify/dist/pnotify.nonblock.css" rel="stylesheet">
-
+    <link href="<?php echo base_url()?>assets/vendors/pnotify/dist/pnotify.history.css" rel="stylesheet">
     <!-- Custom Theme Style -->
     <link href="<?php echo base_url()?>assets/build/css/custom.min.css" rel="stylesheet">
     

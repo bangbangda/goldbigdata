@@ -138,7 +138,9 @@
     var slider = $("#openpri").data("ionRangeSlider");
 
     // 初始化旧数据，下面修改modal会用到
-    var old_data;
+    var old_data = new Object();
+    // dialog用，减少对服务器的请求
+    var list_data = new Object();
     
     // 列表参数配置
     var table = $("table[grid-manager='table_one']");
@@ -151,6 +153,12 @@
         , supportSorting: true
         , height: '100%'
         , columnData: [
+            {
+                key: 'id',
+                remind: '这里可以显示说明',
+                text: 'ID',
+                sorting: ''
+            },
             {
                 key: 'variety',
                 remind: '这里可以显示说明',
@@ -192,10 +200,14 @@
                 key: 'operation',
                 text: '操作',
                 remind: '对该数据进行操作',
+                align: 'center',
                 template: function(nodeData, rowData){
+                    list_data[rowData.id] = rowData;
                      // nodeData: 当前单元格的渲染数据
                     // rowData: 当前单元格所在行的渲染数据
-                    return '<button type="button" class="btn btn-success btn-xs" onclick="update_modal_show(' + rowData.id + ');">&nbsp;&nbsp;修改&nbsp;&nbsp;</button>';
+                    return '<button type="button" class="btn btn-success btn-xs" onclick="update_modal_show(' + rowData.id + ');">&nbsp;&nbsp;修改&nbsp;&nbsp;</button>&nbsp;&nbsp;'
+                        +  '<button type="button" class="btn btn-warning btn-xs" onclick="delete_show(' + rowData.id + ');">&nbsp;&nbsp;删除&nbsp;&nbsp;</button>&nbsp;&nbsp;&nbsp;&nbsp;';
+                    
                 }
             }
         ]
@@ -203,13 +215,13 @@
 
     // 修改modal弹出
     function update_modal_show (id) {
+        old_data.id = id;
         $.ajax({
             type: "POST",
             url: "<?php echo base_url() ?>/admin/gold/get_row",
             data: "id=" + id,
             dataType: "json",
             success: function(result){
-                console.log(result);
                 if (result == null) {
                     new PNotify({
                         title: '出错啦(╯﹏╰)',
@@ -276,6 +288,77 @@
         slider.reset();
         start_search();
     }
+    
+    // 更新
+    function submit_update() {
+        $.ajax({
+            type: "POST",
+            url: "<?php echo base_url() ?>/admin/gold/update_check",
+            data: {"latestpri":$("#latestpri_new").val(), 
+                    "openpri":$("#openpri_new").val(), 
+                    "variety": $("#variety_new").val(),
+                    "time": $("#time_new").val(),
+                    "id":old_data.id},
+            dataType: "json",
+            success: function(result){
+                if(result.error_flag == 1){
+                    new PNotify({
+                        title: '输入 错误',
+                        text: result.error_msg,
+                        type: 'error',
+                        styling: 'bootstrap3'
+                    });
+                } else {
+                    $('#update_modal').modal('hide');
+                    document.querySelector('table').GM('refreshGrid');
+                }
+            }
+        });
+    }
+    
+    //单条数据删除时间
+    function delete_show(id) {
+        new PNotify({
+            title: '删除提示：ID = ' + list_data[id].id,
+            text: '这条数据将被永久删除，不可恢复',
+            icon: 'glyphicon glyphicon-question-sign',
+            styling: 'bootstrap3',
+            type: "error",
+            delay: 3000,
+            confirm: {
+                confirm: true,
+                buttons: [{
+                    text: '删除',
+                    addClass: 'btn-warning ',
+                    click: function(notice) {
+                        notice.remove();
+                        $.ajax({
+                            type: "POST",
+                            url: "<?php echo base_url() ?>/admin/gold/delete_data/" + id,
+                            data: {"id":list_data[id].id},
+                            success: function(result){
+                                document.querySelector('table').GM('refreshGrid');
+                            }
+                        });
+                    }
+                }, {
+                    text: '取消',
+                    addClass: 'btn-default',
+                    click: function(notice) {
+                        notice.remove();
+                    }
+                }]
+            },
+            buttons: {
+                closer: false,
+                sticker: false
+            },
+            history: {
+                maxonscreen: 1,
+                history: false
+            }
+        });
+    }
 </script>
 <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true" id="update_modal">
     <div class="modal-dialog modal-lg">
@@ -324,11 +407,12 @@
                         <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true"></span>
                     </div>
                 </div>
+                
             </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">关 闭</button>
-          <button type="button" class="btn btn-success">保 存</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">关 闭</button>
+            <button type="button" class="btn btn-success" onclick="submit_update();">保 存</button>
         </div>
       </div>
     </div>

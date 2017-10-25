@@ -436,9 +436,9 @@
                             message: '您已提交成功！',
                             type: 'success'
                         });
-//                        setTimeout(function() {
-//                            location.href="<?php echo base_url()?>apply_in"
-//                        },2000);
+                        setTimeout(function() {
+                            location.href="<?php echo base_url()?>apply_in"
+                        },2000);
                     }
                 });
             } else {

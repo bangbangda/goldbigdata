@@ -2,10 +2,10 @@
 
 namespace App\Controllers\admin;
 
-use CodeIgniter\Controller;
+use App\Libraries\MyController;
 use App\Models\GoldsModel;
 
-class Gold extends Controller {
+class Gold extends MyController {
 
     /**
      * 黄金大数据主页
@@ -23,7 +23,11 @@ class Gold extends Controller {
         echo view('admin/footer');
     }
     
+    /**
+     * 检索
+     */
     function post_check() {
+        $this->ajax_check();
         // 获取所有值
         $data = $this->request->getPost();
         // 加载验证类
@@ -99,12 +103,72 @@ class Gold extends Controller {
      * ajax 数据获取
      */
     function get_row() {
+        $this->ajax_check();
         // 获取值 
         $post = $this->request->getPost();
         $GoldsModel = new GoldsModel();
         $info = $GoldsModel->getWhere(['id' => $post['id']])
                                    ->getRowArray();
         echo json_encode($info);
+    }
+    
+    /**
+     * 更新
+     */
+    function update_check() {
+        $this->ajax_check();
+        // 获取所有值
+        $data = $this->request->getPost();
+        // 加载验证类
+        $validation =  \Config\Services::validation();
+        // 初始化验证信息
+        $rules = array();
+        $rules['latestpri'] = 'required|numeric';
+        $rules['openpri'] = 'required|numeric';
+        $rules_err = [
+            'latestpri' => [
+                'required' => '最新价 必填',
+                'numeric' => '最新价 请输入数字',
+            ],
+            'openpri' => [
+                'required' => '开盘价 必填',
+                'numeric' => '开盘价 请输入数字',
+            ]
+        ];
+        $validation->setRules($rules,$rules_err);
+        $validation->run($data);
+        
+        $result = array('error_flag' => 0);
+        // 返回验证信息
+        if (!$this->validate([])){
+            $result['error_flag'] = 1;
+            $result['error_msg'] = '';
+            foreach ($validation->getErrors() as $key => $value) {
+                $result['error_msg'] .= $value.'</br>';
+            }
+        } else {
+            $GoldsModel = new GoldsModel();
+            // 开始更新
+            $data = array(
+                'id' => $data['id'],
+                'latestpri'  => $data['latestpri'],
+                'openpri'  => $data['openpri'],
+                'variety'  => $data['variety'],
+                'time'  => $data['time']
+            );
+            $GoldsModel->replace($data);
+        }
+        echo json_encode($result);
+    }
+    
+    /**
+     * 删除一条数据
+     * @param type $id id
+     */
+    function delete_data($id) {
+        $this->ajax_check();
+        $GoldsModel = new GoldsModel();
+        $GoldsModel->delete(array('id' => $id));
     }
 
 }

@@ -20,6 +20,8 @@
     <script src="<?php echo base_url()?>assets/vendors/pnotify/dist/pnotify.js"></script>
     <script src="<?php echo base_url()?>assets/vendors/pnotify/dist/pnotify.buttons.js"></script>
     <script src="<?php echo base_url()?>assets/vendors/pnotify/dist/pnotify.nonblock.js"></script>
+    <script src="<?php echo base_url()?>assets/vendors/pnotify/dist/pnotify.confirm.js"></script>
+    <script src="<?php echo base_url()?>assets/vendors/pnotify/dist/pnotify.history.js"></script>
     
     <!-- Custom Theme Scripts -->
     <!--<script src="<?php echo base_url()?>assets/build/js/custom.min.js"></script>-->

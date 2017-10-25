@@ -437,7 +437,7 @@
                             type: 'success'
                         });
                         setTimeout(function() {
-                            location.href="<?php echo base_url()?>apply_in"
+                            location.href="<?php echo base_url()?>apply_in/index/"+Math.ceil(Math.random()*100);
                         },2000);
                     }
                 });

@@ -18,7 +18,7 @@ class Apply_in extends Controller {
     /**
      * 首页
      */
-    public function index() {
+    public function index($rand = 1) {
         echo view('apply');
     }
     

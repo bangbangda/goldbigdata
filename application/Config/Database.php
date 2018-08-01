@@ -31,7 +31,7 @@ class Database extends \CodeIgniter\Database\Config
 		'DSN'          => '',
 		'hostname'     => 'localhost',
 		'username'     => 'root',
-		'password'     => 'MyNewPass4!',
+		'password'     => 'root',
 		'database'     => 'dwh_db',
 		'DBDriver'     => 'MySQLi',
 		'DBPrefix'     => '',
